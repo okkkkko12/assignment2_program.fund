@@ -51,7 +51,7 @@ class TestFunctionality(unittest.TestCase):
         # Assert that the number of tickets has increased by 1
         self.assertEqual(len(self.museum.tickets), initial_ticket_count + 1, "Failed to purchase child ticket")
         # Print success message indicating the test passed and show total tickets
-        print(f'Test ticket child: PASSED, total tickets: {len(self.museum.tickets)}')
+        print(f"\nTicket Purchased for Visitor: Name: {visitor.get_name()}, Age: {visitor.get_age()}, Ticket Type: {visitor.get_ticket_type()}, Price: AED {visitor.get_ticket_price()}. Exhibition: {ticket.get_exhibition().get_title()}.")
 
     def test_ticket_senior(self):
         # Test case for a senior purchasing a ticket
@@ -78,7 +78,7 @@ class TestFunctionality(unittest.TestCase):
 
     def test_display_payment_receipt2(self):
         # Test case for displaying a payment receipt for a child visitor
-        visitor = Visitor('Ali', 10, '3353282484', 'ali@gmail.com', '55-1234', 'Child', 0)  # Create a child visitor
+        visitor = Visitor('Ali', 10, '784201475648395', 'muhammed@gmail.com', '0558377504', 'Child', 0)  # Create a child visitor
         ticket_price = self.prices.calc_ticket_price(visitor.get_age(), visitor.get_ticket_type(), is_group=False)  # Calculate ticket price for the child
         visitor.set_ticket_price(ticket_price)  # Set the calculated ticket price for the visitor
         ticket = Ticket('002', visitor.get_ticket_type(), self.exhibition, visitor, datetime.now())  # Create a ticket for the child visitor
@@ -87,6 +87,32 @@ class TestFunctionality(unittest.TestCase):
         receipt = self.museum.display_payment_receipt(ticket, dob)  # Generate and display the payment receipt
         # Print the payment receipt details
         print(f"\nPayment Receipt:\n{receipt}")
+
+    def test_group_ticket_purchase(self):
+        # Test case for a group purchasing tickets
+        group = [
+            Visitor('Sara', 35, '784199008765432', 'sara@example.com', '0501234567', 'Adult', 0),
+            Visitor('Ahmed', 40, '784199876543210', 'ahmed@example.com', '0507654321', 'Adult', 0),
+            Visitor('Layla', 12, '784200876543210', 'layla@example.com', '0501122334', 'Child', 0)
+        ]
+
+        # Assume they are attending the same exhibition
+        is_group = len(group) > 1
+
+        total_cost = 0
+        for member in group:
+            ticket_price = self.prices.calc_ticket_price(member.get_age(), member.get_ticket_type(), is_group)
+            member.set_ticket_price(ticket_price)
+            ticket = Ticket('FAM-' + member.get_national_id(), member.get_ticket_type(), self.exhibition, member,
+                            datetime.now())
+            self.museum.purchase_ticket(ticket)
+            total_cost += ticket_price
+            print(
+                f"Ticket Purchased for {member.get_name()}: Age: {member.get_age()}, Ticket Type: {member.get_ticket_type()}, Price: AED {ticket_price}")
+
+        # Print total cost of this group
+        print(f"\nTotal Cost: AED {total_cost}")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
