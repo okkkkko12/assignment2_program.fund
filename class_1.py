@@ -77,7 +77,6 @@ class Museum:
         # Returns a formatted receipt string
         return (f"Receipt\n"
                 f"Name: {visitor.get_name()}\n"
-                f"Date of Birth: {formatted_dob}\n"
                 f"Date of Purchase: {formatted_purchase_date}\n"
                 f"Time of Purchase: {formatted_purchase_time}\n"
                 f"Ticket Type: {ticket.get_ticket_type()}\n"
